@@ -17,7 +17,7 @@ pool.on('connect', () => {
 
 // log when an error occurs
 pool.on('error', (err) => {
-  console.log('Database connection error:', err);
+  console.error('Database connection error:', err.message);
 });
 
 export const db = drizzle({ client: pool, schema });
