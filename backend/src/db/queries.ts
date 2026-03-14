@@ -19,16 +19,16 @@ export const getUserById = async (id: string) => {
   return db.query.users.findFirst({ where: eq(users.id, id) });
 };
 
-export const updateUser = async (id: string, data: Partial<NewUser>) => {
-  const existingUser = await getUserById(id);
-  if (!existingUser) {
-    throw new Error(`User with id ${id} not found`);
-  }
+type UpdateUserInput = Partial<Pick<NewUser, 'email' | 'name' | 'imageUrl'>>;
+export const updateUser = async (id: string, data: UpdateUserInput) => {
   const [user] = await db
     .update(users)
-    .set(data)
+    .set({ ...data, updatedAt: new Date() })
     .where(eq(users.id, id))
     .returning();
+  if (!user) {
+    throw new Error(`User with id ${id} not found`);
+  }
   return user;
 };
 
@@ -84,7 +84,14 @@ export const getProductsByUserId = async (userId: string) => {
   });
 };
 
-export const updateProduct = async (id: string, data: Partial<NewProduct>) => {
+type UpdateProductInput = Partial<
+  Pick<NewProduct, 'title' | 'description' | 'imageUrl'>
+>;
+export const updateProduct = async (id: string, data: UpdateProductInput) => {
+  const existingProduct = await getProductById(id);
+  if (!existingProduct) {
+    throw new Error(`Product with id ${id} not found`);
+  }
   const [product] = await db
     .update(products)
     .set(data)
@@ -94,6 +101,10 @@ export const updateProduct = async (id: string, data: Partial<NewProduct>) => {
 };
 
 export const deleteProduct = async (id: string) => {
+  const existingProduct = await getProductById(id);
+  if (!existingProduct) {
+    throw new Error(`Product with id ${id} not found`);
+  }
   const [product] = await db
     .delete(products)
     .where(eq(products.id, id))
@@ -107,17 +118,21 @@ export const createComment = async (data: NewComment) => {
   return comment;
 };
 
-export const deleteComment = async (id: string) => {
-  const [comment] = await db
-    .delete(comments)
-    .where(eq(comments.id, id))
-    .returning();
-  return comment;
-};
-
 export const getCommentById = async (id: string) => {
   return db.query.comments.findFirst({
     where: eq(comments.id, id),
     with: { user: true },
   });
+};
+
+export const deleteComment = async (id: string) => {
+  const existingComment = getCommentById(id);
+  if (!existingComment) {
+    throw new Error(`comment with id ${id} not found`);
+  }
+  const [comment] = await db
+    .delete(comments)
+    .where(eq(comments.id, id))
+    .returning();
+  return comment;
 };
