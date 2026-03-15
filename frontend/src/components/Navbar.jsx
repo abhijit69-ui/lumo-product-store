@@ -26,7 +26,7 @@ export default function Navbar() {
                 <PlusIcon className='size-4' />
                 <span className='hidden sm:inline'>New Product</span>
               </Link>
-              <Link>
+              <Link to={'/profile'} className='btn btn-ghost btn-sm gap-1'>
                 <UserIcon className='size-4' />
                 <span className='hidden sm:inline'>Profile</span>
               </Link>
