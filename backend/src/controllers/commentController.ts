@@ -17,7 +17,7 @@ export const createComment = async (
     if (!content)
       return res.status(400).json({ error: 'Comment content is required' });
 
-    // verify comment exists
+    // verify product exists
     const product = await queries.getProductById(productId);
     if (!product) return res.status(404).json({ error: 'Product not found' });
 
