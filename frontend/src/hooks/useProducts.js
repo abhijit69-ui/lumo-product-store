@@ -3,6 +3,7 @@ import {
   createProduct,
   deleteProduct,
   getAllProducts,
+  getMyProducts,
   getProductById,
 } from '../lib/api';
 
@@ -34,12 +35,22 @@ export const useProduct = (id) => {
   return result;
 };
 
+// Users Product
+export const useMyProducts = () => {
+  const result = useQuery({
+    queryKey: ['myProducts'],
+    queryFn: getMyProducts,
+  });
+  return result;
+};
+
 export const useDeleteProduct = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: deleteProduct,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['products'] });
+      queryClient.invalidateQueries({ queryKey: ['myProducts'] });
     },
   });
 };
