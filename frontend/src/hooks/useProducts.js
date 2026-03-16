@@ -5,6 +5,7 @@ import {
   getAllProducts,
   getMyProducts,
   getProductById,
+  updateProduct,
 } from '../lib/api';
 
 export const useProducts = () => {
@@ -52,5 +53,14 @@ export const useDeleteProduct = () => {
       queryClient.invalidateQueries({ queryKey: ['products'] });
       queryClient.invalidateQueries({ queryKey: ['myProducts'] });
     },
+  });
+};
+
+export const useUpdateProduct = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: updateProduct,
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ['updateProduct'] }),
   });
 };
