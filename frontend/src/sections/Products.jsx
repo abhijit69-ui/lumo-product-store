@@ -1,6 +1,7 @@
 import { PackageIcon } from 'lucide-react';
 import { Link } from 'react-router';
 import ProductCard from '../components/ProductCard';
+import NoProductsYet from '../components/NoProductsYet';
 
 export default function Products({ products }) {
   return (
@@ -10,18 +11,10 @@ export default function Products({ products }) {
         All Products
       </h2>
       {products.length === 0 ? (
-        <div className='card bg-base-300'>
-          <div className='card-body items-center text-center py-16'>
-            <PackageIcon className='size-16 text-base-content/20' />
-            <h3 className='card-title text-base-content/50'>No products yet</h3>
-            <p className='text-base-content/40 text-sm'>
-              Be the first to share something!
-            </p>
-            <Link to={'/create'} className='btn btn-primary btn-sm mt-2'>
-              Create Product
-            </Link>
-          </div>
-        </div>
+        <NoProductsYet
+          title='No products yet'
+          subtitle='Be the first to share something!'
+        />
       ) : (
         <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4'>
           {products.map((product) => (
