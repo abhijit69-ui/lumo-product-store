@@ -12,7 +12,7 @@ import NoProductsYet from '../components/NoProductsYet';
 
 export default function ProfilePage() {
   const navigate = useNavigate();
-  const { data: products, isLoading } = useMyProducts();
+  const { data: products, isLoading, isError } = useMyProducts();
   const deleteProduct = useDeleteProduct();
 
   const handleDelete = (id) => {
@@ -20,6 +20,14 @@ export default function ProfilePage() {
   };
 
   if (isLoading) return <LoadingSpinner />;
+
+  if (isError) {
+    return (
+      <div role='alert' className='alert alert-error'>
+        Failed to load your products.
+      </div>
+    );
+  }
 
   return (
     <section className='space-y-6'>
@@ -37,12 +45,12 @@ export default function ProfilePage() {
       <div className='stats bg-base-300 w-full'>
         <div className='stat'>
           <div className='stat-title'>Total Products</div>
-          <div className='stat-value text-primary'>{products?.length || 0}</div>
+          <div className='stat-value text-primary'>{products.length}</div>
         </div>
       </div>
 
       {/* Products */}
-      {products?.length === 0 ? (
+      {products.length === 0 ? (
         <NoProductsYet
           title='No products yet'
           subtitle='Start by creating your first product '
